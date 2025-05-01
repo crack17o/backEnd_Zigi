@@ -1,0 +1,15 @@
+nelmio_cors:
+    defaults:
+        allow_credentials: true
+        allow_origin: ['*']  # Remplacez '*' par l'URL spécifique de votre frontend React en production
+        allow_headers: ['Content-Type', 'Authorization', 'X-Requested-With']
+        expose_headers: ['Link']
+        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+        max_age: 3600
+    paths:
+        '^/api/':  # Cela permet CORS sur toutes les routes de l'API
+            allow_origin: ['*']  # Ou spécifiez l'URL de votre frontend React si nécessaire
+            allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+            allow_headers: ['Content-Type', 'Authorization']
+            expose_headers: ['Content-Disposition']
+            max_age: 3600

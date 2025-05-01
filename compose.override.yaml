@@ -1,0 +1,7 @@
+
+services:
+  app:
+    environment:
+      SYMFONY_ENV: dev
+    volumes:
+      - .:/var/www/html:delegated

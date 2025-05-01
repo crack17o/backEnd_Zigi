@@ -1,0 +1,47 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    imgbb_api_key: '%env(IMGBB_API_KEY)%'
+    cinetpay.api_key: '%env(CINETPAY_API_KEY)%'
+    cinetpay.site_id: '%env(CINETPAY_SITE_ID)%'
+    cinetpay.return_url: '%env(CINETPAY_RETURN_URL)%'
+    cinetpay.notify_url: '%env(CINETPAY_NOTIFY_URL)%'
+    cinetpay.check_url: '%env(CINETPAY_CHECK_URL)%'
+    cinetpay.payment_url: '%env(CINETPAY_PAYMENT_URL)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Explicitly configure the ImgBBService
+    App\Service\ImgBBService:
+        arguments:
+            $imgbbApiKey: '%imgbb_api_key%'
+
+    App\Service\CinetPayService:
+        arguments:
+            $httpClient: '@http_client'
+            $apiKey: '%cinetpay.api_key%'
+            $siteId: '%cinetpay.site_id%'
+            $returnUrl: '%cinetpay.return_url%'
+            $notifyUrl: '%cinetpay.notify_url%'
+            $checkUrl: '%cinetpay.check_url%'
+            $paymentUrl: '%cinetpay.payment_url%'
+
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones

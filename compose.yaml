@@ -1,0 +1,48 @@
+
+services:
+  # Application Symfony (PHP + Apache)
+  app:
+    build: .
+    container_name: zigi_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html:cached
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    env_file:
+      - .env.docker
+    environment:
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_GROUP: www-data
+    networks:
+      - zigi-network
+
+  # Base de données MySQL
+  database:
+    image: mysql:8.0.41
+    container_name: zigi_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234567890
+      MYSQL_DATABASE: zigi
+    ports:
+      - "3306:3307"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p1234567890"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - zigi-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  zigi-network:
+    driver: bridge
